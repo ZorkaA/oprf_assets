@@ -1,6 +1,6 @@
 # (c) 2018 pinto
 # license: gplv2+
-
+srand();# seed the random generator with systime
 # v0.2b
 # will only report the closest bad guy, does no threat assessment.
 # todo:
@@ -26,6 +26,7 @@ var prop_watch = {
     "JA37Di-Viggen": [20,21,22],
     "AJ37-Viggen": [20,21,22],
     "AJS37-Viggen": [20,21,22],
+    "Jaguar-GR1":  [20,21,22],
 };
 
 var radar_stations = [

@@ -240,7 +240,20 @@
 	</controls>
 	
 	<payload>
-	
+    <d-config>
+            <full_damage_dist_m type="double">2.25</full_damage_dist_m>
+            <use_hitpoints_instead_of_failure_modes_bool type="bool">true</use_hitpoints_instead_of_failure_modes_bool>
+            <hp_max type="double">80</hp_max>
+            <hitable_by_air_munitions type="bool">false</hitable_by_air_munitions>
+            <hitable_by_cannon type="bool">true</hitable_by_cannon>
+            <is_fleet type="bool">false</is_fleet>
+            <rwr_to_screen type="bool">false</rwr_to_screen>
+            <rwr_audio_extended type="bool">false</rwr_audio_extended>
+            <tacview_supported type="bool">false</tacview_supported>
+            <m28_auto type="bool">false</m28_auto>
+            <mlw_max type="double">2.25</mlw_max>
+            <auto_flare_caller type="bool">false</auto_flare_caller>
+        </d-config> 	
         <armament>
 				<models type="string">Aircraft/S-75/Models/Armament/Weapons/</models>
                 <modelsUseCase type="bool">true</modelsUseCase>
@@ -270,8 +283,8 @@
                     <long-name type="string">Volga-M</long-name>
 					<vol-search type="double">0.00</vol-search>
                     <vol-track type="double">0.00</vol-track>
-					<guidance type="string">semi-radar</guidance>
-                    <navigation type="string">PN1010</navigation>                   <!-- horizontal APN, vertical aim 5 degrees above for 6 seconds -->
+					<guidance type="string">command</guidance>
+                    <navigation type="string">LOS</navigation>                   <!-- horizontal APN, vertical aim 5 degrees above for 6 seconds -->
 					<max-fire-range-nm type="int">36</max-fire-range-nm>      <!--  -->
 					<FCS-field-deg type="int">360</FCS-field-deg>
 					<seeker-field-deg type="int">360</seeker-field-deg>
@@ -280,7 +293,7 @@
                     <rail-length-m type="double">10.60</rail-length-m>             <!-- authentic length-->
                     <stage-1-duration-sec type="double">4</stage-1-duration-sec> 
                     <weight-launch-lbs>5340</weight-launch-lbs>                      <!--  -->                  
-                    <drag-coeff type="double">0.20</drag-coeff>                 <!-- was 0.40 in older versions -->
+                    <drag-coeff type="double">0.10</drag-coeff>                 <!-- was 0.40 in older versions -->
                     <thrust-lbf-stage-1 type="double">110000</thrust-lbf-stage-1> <!-- source -->
                     <rail type="bool">true</rail>                                <!--  -->                  
                     <rail-point-forward type="bool">false</rail-point-forward>
@@ -295,7 +308,8 @@
 					<stage-2-duration-sec type="double">15</stage-2-duration-sec><!--  -->					
                     <weight-fuel-lbm>2750</weight-fuel-lbm>                       <!--  -->									
 					<arming-time-sec type="double">1</arming-time-sec> 
-					<min-speed-for-guiding-mach type="double">0.65</min-speed-for-guiding-mach> 
+					<min-speed-for-guiding-mach type="double">0.6</min-speed-for-guiding-mach> 
+                    <chaff-resistance type="double">0.87</chaff-resistance>
 					<self-destruct-time-sec type="double">60</self-destruct-time-sec> 
 					<loft-altitude type="int">0</loft-altitude>					
                     <max-report-distance type="double">200</max-report-distance> <!--  -->					
@@ -329,10 +343,26 @@
         <impact1 type="double">-1</impact1>
         <impact2 type="double">-1</impact2>
         <impact3 type="double">-1</impact3>
+        <impact4 type="double">-1</impact4>
+        <impact5 type="double">-1</impact5>
+        <impact6 type="double">-1</impact6>
+        <impact7 type="double">-1</impact7>
+        <impact8 type="double">-1</impact8>
+        <impact9 type="double">-1</impact9>
+        <impact10 type="double">-1</impact10>
+        <impact11 type="double">-1</impact11>
         <hit0 type="double">-1</hit0>
         <hit1 type="double">-1</hit1>
         <hit2 type="double">-1</hit2>
         <hit3 type="double">-1</hit3>
+        <hit4 type="double">-1</hit4>
+        <hit5 type="double">-1</hit5>
+        <hit6 type="double">-1</hit6>
+        <hit7 type="double">-1</hit7>
+        <hit8 type="double">-1</hit8>
+        <hit9 type="double">-1</hit9>
+        <hit10 type="double">-1</hit10>
+        <hit11 type="double">-1</hit11>
         <missiles type="double">1</missiles>
         <timeleft type="double">600</timeleft>
         <damage type="double">100</damage>
@@ -355,6 +385,17 @@
 
     <priority type="int">1</priority>
     <priority1 type="int">1</priority1>
+
+    <instrumentation>
+        <datalink>
+            <data type="int">0</data>
+            <power type="bool">true</power>
+            <channel type="int">1212</channel>
+            <power_prop type="string">/instrumentation/datalink/power</power_prop>
+            <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
+            <receive_period type="double">1</receive_period>
+        </datalink>
+    </instrumentation>
 	
     <nasal>
         <notifications>
@@ -376,7 +417,11 @@
         <armament>
             <file>Aircraft/S-75/Nasal/guided-missiles.nas</file>
         </armament>
+        <datalink>
+            <file>Aircraft/S-75/Nasal/datalink.nas</file>
+        </datalink>
 		<fire_control>
+            <file>Aircraft/S-75/Nasal/fire-control-custom.nas</file>
 			<file>Aircraft/S-75/Nasal/fire-control.nas</file>
 		</fire_control>
     </nasal>

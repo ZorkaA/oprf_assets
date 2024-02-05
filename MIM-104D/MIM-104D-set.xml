@@ -2,48 +2,11 @@
 
 <PropertyList>
 
-    <environment>
-        <in-to-wind type="bool">false</in-to-wind>
-    </environment>
-
-    <carrier>
-        <fdm>
-            <settings>
-                <!-- The maximum bank angle during full rudder deflection -->
-                <bank-limit type="double">15.0</bank-limit>
-
-                <!-- Frequency and overshoot of the oscillator used to
-                     simulate heeling (roll).
-                -->
-                <heel-frequency type="double">0.5</heel-frequency>
-                <heel-overshoot type="double">4.0</heel-overshoot>
-
-                <!-- Frequency and overshoot of the oscillator used to
-                     simulate trimming (pitch).
-                -->
-                <trim-frequency type="double">0.32</trim-frequency>
-                <trim-overshoot type="double">0.45</trim-overshoot>
-
-                <!-- The speed of the waves plus speed of the ship in knots
-                     which generates the maximum overshoot of the trim
-                     oscillation.
-                -->
-                <max-trim-oscillation-wave-kt type="double">30.0</max-trim-oscillation-wave-kt>
-
-                <!-- The speed of the waves in knots which generates the
-                     maximum overshoot of the heel oscillation.
-                -->
-                <max-heel-oscillation-wave-kt type="double">20.0</max-heel-oscillation-wave-kt>
-
-                <movement type="bool">true</movement>
-            </settings>
-        </fdm>
-    </carrier>
 
     <sim>
-        <author>pinto</author>
+        <author>pinto, Nikolai V. Chr., onox</author>
         <description>MIM-104D</description>
-        <long-description>MIM-104D (PAC-3) is a US self-propelled surface to air missile system.</long-description>
+        <long-description>MIM-104D (PAC-2) is a US self-propelled surface to air missile system. Also known as Patroit Missile System.</long-description>
         <status>alpha</status>
         <aircraft-version>0.1</aircraft-version>
 
@@ -107,7 +70,7 @@
                 </limits>
             </config>
         </view>
-        <view n="102">
+        <view n="200">
             <name>Follow</name>
             <type>lookat</type>
             <internal>false</internal>
@@ -151,24 +114,13 @@
             <auto-position type="bool">true</auto-position>
         </tower>
 
-        <systems>
-            <autopilot>
-                <path>Systems/fbw.xml</path>
-            </autopilot>
-            <autopilot>
-                <path>Systems/fdm.xml</path>
-            </autopilot>
-
-            <property-rule n="100">
-                <path>Systems/views.xml</path>
-            </property-rule>
-        </systems>
         <multiplay>
             <visibility-range-nm type="int">500</visibility-range-nm>
             <generic>
                 <int n="0" type="int">0</int>
                 <int n="2" type="int">0</int>
                 <string n="6" type="string"></string><!-- string 6 used by radar lock RWR warning -->
+                <string n="7" type="string"></string><!-- datalink -->
             </generic>
         </multiplay>
 
@@ -210,6 +162,10 @@
                                 setprop("position/latitude-deg",getprop("sim/input/click/latitude-deg"));
                                 setprop("position/longitude-deg",getprop("sim/input/click/longitude-deg"));
                                 setprop("position/altitude-ft",getprop("sim/input/click/elevation-ft"));
+                                var h = geo.elevation(getprop("sim/input/click/latitude-deg"),getprop("sim/input/click/longitude-deg"));
+                                if (h!=nil)
+                                    setprop("position/altitude-ft",h*M2FT+0.010);
+                                fire_control.start_time = systime();
                             </script>
                         </binding>
                     </item>
@@ -218,7 +174,9 @@
                         <binding>
                             <command>nasal</command>
                             <script>
+                                setprop("payload/armament/msg",0);
                                 damage.printDamageLog();
+                                setprop("payload/armament/msg",1);
                             </script>
                         </binding>
                     </item>
@@ -256,33 +214,33 @@
             <trigger type="bool">false</trigger>
             <station n="1">
                 <offsets>
-                    <x-m type="double">  13</x-m>
+                    <x-m type="double">  12</x-m>
                     <y-m type="double">   0</y-m>
-                    <z-m type="double">   2.5</z-m>
+                    <z-m type="double">   3</z-m>
                 </offsets>
                 <trigger type="bool">false</trigger>
             </station>
             <station n="2">
                 <offsets>
-                    <x-m type="double">  13</x-m>
+                    <x-m type="double">  12</x-m>
                     <y-m type="double">   0</y-m>
-                    <z-m type="double">   2.5</z-m>
+                    <z-m type="double">   3</z-m>
                 </offsets>
                 <trigger type="bool">false</trigger>
             </station>
             <station n="3">
                 <offsets>
-                    <x-m type="double">  13</x-m>
+                    <x-m type="double">  12</x-m>
                     <y-m type="double">   0</y-m>
-                    <z-m type="double">   2.5</z-m>
+                    <z-m type="double">   3</z-m>
                 </offsets>
                 <trigger type="bool">false</trigger>
             </station>
             <station n="4">
                 <offsets>
-                    <x-m type="double">  13</x-m>
+                    <x-m type="double">  12</x-m>
                     <y-m type="double">   0</y-m>
-                    <z-m type="double">   2.5</z-m>
+                    <z-m type="double">   3</z-m>
                 </offsets>
                 <trigger type="bool">false</trigger>
             </station>
@@ -299,7 +257,20 @@
                 <lbs>50</lbs>
             </opt>
         </weight>
-	
+        <d-config>
+            <full_damage_dist_m type="double">5</full_damage_dist_m>
+            <use_hitpoints_instead_of_failure_modes_bool type="bool">true</use_hitpoints_instead_of_failure_modes_bool>
+            <hp_max type="double">80</hp_max>
+            <hitable_by_air_munitions type="bool">false</hitable_by_air_munitions>
+            <hitable_by_cannon type="bool">true</hitable_by_cannon>
+            <is_fleet type="bool">false</is_fleet>
+            <rwr_to_screen type="bool">false</rwr_to_screen>
+            <rwr_audio_extended type="bool">false</rwr_audio_extended>
+            <tacview_supported type="bool">false</tacview_supported>
+            <m28_auto type="bool">false</m28_auto>
+            <mlw_max type="double">2.25</mlw_max>
+            <auto_flare_caller type="bool">false</auto_flare_caller>
+        </d-config>	
         <armament>
 				<models type="string">Aircraft/MIM-104D/Models/Armament/Weapons/</models>
                 <modelsUseCase type="bool">true</modelsUseCase>
@@ -321,6 +292,57 @@
                 <MAW-bearing type="double">0</MAW-bearing>
                 <MAW-active type="bool">false</MAW-active>
                 <spike type="bool">false</spike>
+                <gem>        
+                    <type-id type="int">63</type-id>
+                    <short-name type="string">GEM</short-name>
+                    <long-name type="string">Guidance Enhanced Missile</long-name>
+                    <max-fire-range-nm type="int">43</max-fire-range-nm>
+                    <cross-section-sqft type="double">1.42</cross-section-sqft>
+                    <weight-launch-lbs>1500</weight-launch-lbs><!-- PAC1, not sure about GEM -->
+
+                    <vol-search type="double">0.00</vol-search>
+                    <vol-track type="double">0.15</vol-track>                      <!--  -->
+                    <vol-track-weak type="double">0.1</vol-track-weak>           <!--  -->
+                    <guidance type="string">tvm</guidance>
+                    <navigation type="string">APN3003</navigation>                   <!--  -->
+                    <all-aspect type="bool">true</all-aspect>
+                    
+                    <FCS-field-deg type="int">360</FCS-field-deg>
+                    <seeker-field-deg type="int">400</seeker-field-deg>
+                    <max-g type="int">25</max-g>
+                    <thrust-lbf-stage-1 type="double">15000</thrust-lbf-stage-1>
+                    <thrust-lbf-stage-2 type="double">0</thrust-lbf-stage-2> <!--  -->
+                    <stage-1-duration-sec type="double">12</stage-1-duration-sec>
+                    <stage-gap-duration-sec type="double">0</stage-gap-duration-sec>
+                    <stage-2-duration-sec type="double">0</stage-2-duration-sec>
+                    
+                    <weight-warhead-lbs>185</weight-warhead-lbs>
+                    <weight-fuel-lbm>1000</weight-fuel-lbm>                       <!--  -->
+                    <drag-coeff type="double">0.10</drag-coeff>                  <!--  -->
+                    
+                    <arming-time-sec type="double">2</arming-time-sec> 
+                    <min-speed-for-guiding-mach type="double">0.45</min-speed-for-guiding-mach> 
+                    <self-destruct-time-sec type="double">75</self-destruct-time-sec> 
+                    <self-destruct-at-lock-lost type="bool">true</self-destruct-at-lock-lost>
+                    <seeker-angular-speed-dps type="double">3000</seeker-angular-speed-dps>
+                    <loft-altitude type="int">0</loft-altitude>
+                    <min-fire-range-nm type="double">0.40</min-fire-range-nm>
+                    <max-report-distance type="double">200</max-report-distance> <!--  -->
+                    <rail type="bool">true</rail>
+                    <rail-length-m type="double">7.5</rail-length-m>
+                    <rail-point-forward type="bool">false</rail-point-forward>
+                    <rail-pitch-deg type="double">45</rail-pitch-deg>
+                    <rail-heading-deg type="double">0</rail-heading-deg>
+                    <chaff-resistance type="double">0.93</chaff-resistance>
+                    <proportionality-constant type="double">3</proportionality-constant>
+                    <class type="string">A</class>
+                    <fire-msg>Bird away</fire-msg>
+                    <telemetry type="bool">true</telemetry>
+                    <FCS-at-origin type="bool">false</FCS-at-origin>         
+                    <FCS-x type="double">0</FCS-x>
+                    <FCS-y type="double">0</FCS-y>
+                    <FCS-z type="double">25</FCS-z> 
+                </gem>
             </armament>
     </payload>
 
@@ -357,22 +379,33 @@
     </sam>
 
     <enemies>
-        <e1 userarchive="y" type="string">Leto</e1>
-        <e2 userarchive="y" type="string">swamp</e2>
-        <e3 userarchive="y" type="string">pinto</e3>
-        <e4 userarchive="y" type="string">fb237</e4>
-        <e5 userarchive="y" type="string">Wilco-1</e5>
-        <e6 userarchive="y" type="string">Kokos</e6>
-        <e7 userarchive="y" type="string">J-Mav16</e7>
-        <e8 userarchive="y" type="string">S</e8>
-        <e9 userarchive="y" type="string">Raider1</e9>
-        <e10 userarchive="y" type="string">Slobb</e10>
-        <e11 userarchive="y" type="string">5H1N0B1</e11>
-        <e12 userarchive="y" type="string">SNOWY1</e12>
+        <e1 userarchive="y" type="string">target1</e1>
+        <e2 userarchive="y" type="string">target2</e2>
+        <e3 userarchive="y" type="string">target3</e3>
+        <e4 userarchive="y" type="string">target4</e4>
+        <e5 userarchive="y" type="string">target5</e5>
+        <e6 userarchive="y" type="string">target6</e6>
+        <e7 userarchive="y" type="string">target7</e7>
+        <e8 userarchive="y" type="string">target8</e8>
+        <e9 userarchive="y" type="string">target9</e9>
+        <e10 userarchive="y" type="string">targetA</e10>
+        <e11 userarchive="y" type="string">targetB</e11>
+        <e12 userarchive="y" type="string">targetC</e12>
     </enemies>
 
     <priority type="int">0</priority>
     <priority0 type="int">1</priority0>
+
+    <instrumentation>
+        <datalink>
+            <data type="int">0</data>
+            <power type="bool">true</power>
+            <channel type="int">1212</channel>
+            <power_prop type="string">/instrumentation/datalink/power</power_prop>
+            <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
+            <receive_period type="double">1</receive_period>
+        </datalink>
+    </instrumentation>
 	
     <nasal>
         <!--emesary><file>Aircraft/S-300/Nasal/emesary.nas</file></emesary>
@@ -396,7 +429,11 @@
         <armament>
             <file>Aircraft/MIM-104D/Nasal/guided-missiles.nas</file>
         </armament>
+        <datalink>
+            <file>Aircraft/MIM-104D/Nasal/datalink.nas</file>
+        </datalink>
 		<fire_control>
+            <file>Aircraft/MIM-104D/Nasal/fire-control-custom.nas</file>
 			<file>Aircraft/MIM-104D/Nasal/fire-control.nas</file>
 		</fire_control>
     </nasal>
